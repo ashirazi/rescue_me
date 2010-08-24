@@ -1,0 +1,55 @@
+= rescue_me
+
+Provides a convenience method to retry blocks of code that might fail due to
+temporary errors, e.g. a network service that becomes temporarily unavailable.
+The retries are timed to back-off exponentially (2^n seconds), hopefully giving
+time for the remote server to recover. These are the default wait times between
+consecutive attempts:
+  0, 1, 2, 4, 8, 16, 32, 64, 128, ... seconds
+
+Usage:
+  rescue_and_retry(max_attempts, *temporary_exceptions) {
+    # your code
+  }
+
+Example - retry my code up to 7 times (over about a minute) if I see the
+following 2 network errors:
+  rescue_and_retry(7, Net::SMTPServerBusy, IOError) {
+    smtp.send_message(message, from_address, to_address )
+  }
+
+Log output:
+  WARN -- : rescue and retry (attempt 1/5): ./mailer.rb:43,  <SMTPServerBusy: 451 4.3.0 Mail server temporarily rejected message.>
+  WARN -- : rescue and retry (attempt 2/5): ./mailer.rb:43,  <SMTPServerBusy: 451 4.3.0 Mail server temporarily rejected message.>
+  WARN -- : rescue and retry (attempt 3/5): ./mailer.rb:43,  <SMTPServerBusy: 451 4.3.0 Mail server temporarily rejected message.>
+  # No further output or stacktrace. Block succeeded on 4th attempt.
+
+
+== Copyright
+
+Copyright (c) 2010 Arild Shirazi. All rights reserved.
+
+Redistribution and use in source and binary forms, with or without modification,
+are permitted provided that the following conditions are met:
+
+   1. Redistributions of source code must retain the above copyright notice,
+      this list of conditions and the following disclaimer.
+
+   2. Redistributions in binary form must reproduce the above copyright notice,
+      this list of conditions and the following disclaimer in the documentation
+      and/or other materials provided with the distribution.
+
+THIS SOFTWARE IS PROVIDED BY ARILD SHIRAZI ``AS IS'' AND ANY EXPRESS OR IMPLIED
+WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT
+SHALL ARILD SHIRAZI OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
+OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+The views and conclusions contained in the software and documentation are those
+of the authors and should not be interpreted as representing official policies,
+either expressed or implied, of Arild Shirazi.
