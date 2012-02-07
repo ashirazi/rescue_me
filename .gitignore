@@ -20,3 +20,4 @@ pkg
 *.gemspec
 
 ## PROJECT::SPECIFIC
+Gemfile.lock
