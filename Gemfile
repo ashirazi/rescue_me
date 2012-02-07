@@ -1,7 +1,4 @@
-# A sample Gemfile
 source "http://rubygems.org"
-
-gem "jeweler"
 
 group :development, :test do
   gem "test-unit"
