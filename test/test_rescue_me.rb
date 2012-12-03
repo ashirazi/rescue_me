@@ -8,7 +8,7 @@ class TestRescueMe < Test::Unit::TestCase
     attr_reader :method_called_count
 
     def initialize
-      @method_called_count = 0;
+      @method_called_count = 0
     end
 
     def exception_free
@@ -26,7 +26,7 @@ class TestRescueMe < Test::Unit::TestCase
     def raise_smtp_exception_until_call(times)
       @method_called_count += 1
       @smtp_exception_count = (@smtp_exception_count ||= 0) + 1
-      raise Net::SMTPServerBusy until times > @smtp_exception_count
+      raise Net::SMTPServerBusy if times > @smtp_exception_count
     end
 
   end # ExceptionCounter
@@ -34,7 +34,6 @@ class TestRescueMe < Test::Unit::TestCase
   context "rescue_and_retry of code that might raise temporary exceptions" do
     setup do
       @exception_counter = ExceptionCounter.new
-      @previous_call_count = @exception_counter.method_called_count
     end
 
     should "run an exception-free block of code once" do
@@ -43,33 +42,34 @@ class TestRescueMe < Test::Unit::TestCase
           @exception_counter.exception_free
         }
       end
-      assert 1, @exception_counter.method_called_count
+      assert_equal 1, @exception_counter.method_called_count
     end
 
-    should "attempt to run a block that raises an unexpected exception " +
-        "only once" do
+    should "attempt to run a block that raises an unexpected exception only once" do
       assert_raise(ZeroDivisionError) do
         rescue_and_retry(5, IOError) {
           @exception_counter.raise_zero_division_error
         }
       end
-      assert 1, @exception_counter.method_called_count
+      assert_equal 1, @exception_counter.method_called_count
     end
 
     should "re-run the block of code for exactly max_attempt number of times" do
       assert_raise(ZeroDivisionError) do
-        rescue_and_retry(3, IOError) {
+        rescue_and_retry(3, ZeroDivisionError) {
           @exception_counter.raise_zero_division_error
         }
       end
-      assert 3, @exception_counter.method_called_count - @previous_call_count 
+      assert_equal 3, @exception_counter.method_called_count
+
+      @exception_counter = ExceptionCounter.new
 
       assert_raise(ZeroDivisionError) do
-        rescue_and_retry(1, IOError) {
+        rescue_and_retry(1, ZeroDivisionError) {
           @exception_counter.raise_zero_division_error
         }
       end
-      assert 1, @exception_counter.method_called_count - @previous_call_count 
+      assert_equal 1, @exception_counter.method_called_count
     end
 
     should "not re-run the block of code after it has run successfully" do
@@ -78,7 +78,7 @@ class TestRescueMe < Test::Unit::TestCase
           @exception_counter.raise_smtp_exception_until_call(3)
         }
       end
-      assert 3, @exception_counter.method_called_count
+      assert_equal 3, @exception_counter.method_called_count
     end
 
   end
