@@ -11,7 +11,7 @@ module Kernel
   #       exceptional conditions that are likely to work upon a retry.
   def rescue_and_retry(max_attempts=7, *temporary_exceptions)
     retry_interval = 2    # A good initial start value. Tweak as needed.
-    temporary_exceptions << Exception if temporary_exceptions.empty?
+    temporary_exceptions << StandardError if temporary_exceptions.empty?
     begin 
       yield
     rescue *temporary_exceptions => e
