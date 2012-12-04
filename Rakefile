@@ -1,5 +1,6 @@
-require 'rake'
-require_relative 'lib/rescue_me/version'
+#!/usr/bin/env rake
+require "bundler/gem_tasks"
+require "rspec/core/rake_task"
 
 require 'rake/testtask'
 Rake::TestTask.new(:test) do |test|
