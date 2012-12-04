@@ -1,8 +1,8 @@
-pkg/*
-doc/*
+pkg
+doc
+coverage
 *.gem
 *.rbc
-.*.swp
 *.bak
 .bundle
 .yardoc
@@ -25,10 +25,10 @@ Desktop DF
 *.tmproj
 tmtags
 
-## EMACS
+## EMACS (really?)
 *~
 \#*
 .\#*
 
 ## VIM
-*.swp
+.*.sw*
