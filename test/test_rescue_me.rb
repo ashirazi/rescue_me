@@ -1,4 +1,4 @@
-require 'helper'
+require_relative 'test_helper'
 
 class TestRescueMe < Test::Unit::TestCase
 
