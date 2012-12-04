@@ -15,11 +15,19 @@ Gem::Specification.new do |s|
   s.rubyforge_project = 'rescue_me'
 
   s.add_development_dependency 'bundler'
-  s.add_development_dependency 'test-unit'
-  s.add_development_dependency 'guard-test'
+  # s.add_development_dependency 'guard-test'
   s.add_development_dependency 'shoulda'
+  s.add_development_dependency 'simplecov'
 
   s.files        = Dir.glob('{lib}/**/*') + %w[LICENSE README.rdoc]
   s.require_path = 'lib'
 end
 
+# group :development do
+#   gem 'rb-fsevent'
+#   gem 'ruby_gntp'
+#   platforms :ruby do
+#     gem 'rb-readline'
+#   end
+#   gem "guard-test"
+# end
