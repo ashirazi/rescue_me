@@ -1,5 +1,6 @@
-module Kernel
+require "rescue_me/version"
 
+module Kernel
   # Reattempts to run code passed in to this block if a temporary exception occurs
   # (e.g. Net::SMTPServerBusy), using an exponential back-off algorithm
   # (e.g. retry immediately, then after 1, 2, 4, 8, 16, 32... sec).
@@ -16,42 +17,13 @@ module Kernel
       yield
     rescue *temporary_exceptions => e
       attempt = (attempt || 0) + 1
-      RescueMe::Logger.warn(attempt, max_attempts, caller, e)
-
+      message = "rescue_and_retry(#{attempt}/#{max_attempts}) " +
+          "\"#{e.class}: #{e.message}\" in #{caller[1].sub(/.*\/(.*):in.*/,'\1')}"
+      (defined? logger) ? logger.warn(message) : STDERR.puts(message)
       raise(e) if attempt >= max_attempts
-
       # Retry immediately before exponential waits (1, 2, 4, 16, ... sec)
       sleep retry_interval**(attempt - 2) if attempt >= 2
       retry
     end
   end
-
-end
-
-module RescueMe
-  require "logger"
-
-  class << self
-    def logger
-      @logger ||= defined?(Rails) && Rails.respond_to?(:logger) ? Rails.logger : ::Logger.new($stdout)
-    end
-  end
-
-  module Logger
-
-    class << self
-      def warn(attempt, max_attempts, kaller, exception)
-        if RescueMe.logger && RescueMe.logger.respond_to?(:warn)
-          RescueMe.logger.warn(rescued_message(attempt, max_attempts, kaller, exception))
-        end
-      end
-
-      def rescued_message(attempt, max_attempts, kaller, exception)
-        "rescue and retry (attempt #{attempt}/#{max_attempts}): " +
-        "#{kaller.first}, <#{exception.class}: #{exception.message}>"
-      end
-    end
-
-  end
-
 end

@@ -1,33 +1,26 @@
-# -*- encoding: utf-8 -*-
-Kernel.load File.expand_path('../lib/rescue_me/version.rb', __FILE__)
+# coding: utf-8
+lib = File.expand_path('../lib', __FILE__)
+$LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
+require 'rescue_me/version'
 
-Gem::Specification.new do |s|
-  s.name        = 'rescue_me'
-  s.version     = RescueMe::VERSION
-  s.platform    = Gem::Platform::RUBY
-  s.authors     = ['Arild Shirazi']
-  s.email       = ['as4@eshirazi.com']
-  s.homepage    = 'https://github.com/ashirazi/rescue_me'
-  s.summary     = 'Retry a block of code that might fail due to temporary errors.'
-  s.description = 'Provides a convenience method to retry blocks of code that might fail due to temporary errors, e.g. a network service that becomes temporarily unavailable. The retries are timed to back-off exponentially (2^n seconds), hopefully giving time for the remote server to recover.'
+Gem::Specification.new do |spec|
+  spec.name        = 'rescue_me'
+  spec.version     = RescueMe::VERSION
+  spec.authors     = ['Arild Shirazi']
+  spec.email       = ['as4@eshirazi.com']
+  spec.description = 'Provides a convenience method to retry blocks of code that might fail due to temporary errors, e.g. a network service that becomes temporarily unavailable. The retries are timed to back-off exponentially (2^n seconds), hopefully giving time for the remote server to recover.'
+  spec.summary     = 'Retry a block of code that might fail due to temporary errors.'
+  spec.homepage    = 'https://github.com/ashirazi/rescue_me'
+  spec.license     = 'MIT'
 
-  s.required_rubygems_version = '>= 1.3.6'
-  s.rubyforge_project = 'rescue_me'
+  spec.files         = `git ls-files`.split($/)
+  spec.executables   = spec.files.grep(%r{^bin/}) { |f| File.basename(f) }
+  spec.test_files    = spec.files.grep(%r{^(test|spec|features)/})
+  spec.require_paths = ["lib"]
 
-  s.add_development_dependency 'bundler'
-  # s.add_development_dependency 'guard-test'
-  s.add_development_dependency 'shoulda'
-  s.add_development_dependency 'simplecov'
-
-  s.files        = Dir.glob('{lib}/**/*') + %w[LICENSE README.rdoc]
-  s.require_path = 'lib'
+  spec.add_development_dependency 'bundler'
+  spec.add_development_dependency 'rake'
+  spec.add_development_dependency 'rspec'
+  spec.add_development_dependency 'shoulda'
+  spec.add_development_dependency 'simplecov'
 end
-
-# group :development do
-#   gem 'rb-fsevent'
-#   gem 'ruby_gntp'
-#   platforms :ruby do
-#     gem 'rb-readline'
-#   end
-#   gem "guard-test"
-# end

@@ -1,7 +1,6 @@
 require 'simplecov'
 SimpleCov.start
 
-require 'test/unit'
-require 'shoulda'
+require 'rspec'
 
 require_relative '../lib/rescue_me'
