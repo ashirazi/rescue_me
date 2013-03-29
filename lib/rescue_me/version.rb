@@ -1,3 +1,3 @@
 module RescueMe
-  VERSION = '0.1.2' unless defined? RescueMe::VERSION
+  VERSION = '0.1.3' unless defined? RescueMe::VERSION
 end
