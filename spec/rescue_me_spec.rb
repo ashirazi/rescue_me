@@ -30,11 +30,17 @@ class ExceptionCounter
 
 end # ExceptionCounter
 
+class TestLogger
+  def warn(msg); puts msg; end
+end
+
 describe 'rescue_me' do
 
   before(:each) do
     @exception_counter = ExceptionCounter.new
   end
+
+  let(:logger) { TestLogger.new }
 
   it "runs an exception-free block of code once" do
     rescue_and_retry {
@@ -80,6 +86,15 @@ describe 'rescue_me' do
       }
     end.to_not raise_error
     @exception_counter.method_called_count.should == 3
+  end
+
+  it "names the enclosing method from which an exception arises" do
+    logger.should_receive(:warn).with(/rescue_me_spec/)
+    expect do
+      rescue_and_retry(1, ZeroDivisionError) {
+        @exception_counter.raise_zero_division_error
+      }
+    end.to raise_error
   end
 
 end
