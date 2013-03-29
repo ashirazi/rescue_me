@@ -1,11 +1,9 @@
 pkg
-rdoc
 coverage
 *.gem
 *.rbc
 *.bak
 .bundle
-.yardoc
 .rbx
 .rvmrc
 Gemfile.lock
